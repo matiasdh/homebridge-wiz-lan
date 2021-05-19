@@ -14,13 +14,24 @@ function strIp() {
   return internalIp.v4.sync() ?? "0.0.0.0";
 }
 
+function strBroadCastIp() {
+  return strIp() === "0.0.0.0" ? "255.255.255.255" ?  ;
+}
+
+function strBroadCastIp() {
+  const broadcastAddress = strIp().split('.');
+  broadcastAddress.splice(3, 1, "255")
+  const broadcastAddressResult = broadcastAddress.join('.');
+  return (broadcastAddressResult === "0.0.0.255") ? "255.255.255.255" : broadcastAddressResult;
+}
+
 const BROADCAST_PORT = 38899;
 
 function getNetworkConfig({ config }: HomebridgeWizLan) {
   return {
     ADDRESS: config.address ?? strIp(),
     PORT: config.port ?? 38900,
-    BROADCAST: config.broadcast ?? "255.255.255.255",
+    BROADCAST: config.broadcast ?? strBroadCastIp(),
     MAC: config.mac ?? strMac(),
   };
 }
